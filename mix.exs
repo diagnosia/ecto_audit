@@ -50,13 +50,13 @@ defmodule EctoAudit.Mixfile do
   defp deps do
     [
       {:postgrex, ">= 0.0.0"},
-      {:ecto, "~> 2.1"},
+      {:ecto, "~> 3.0"},
       {:poison, "~> 3.1"},
       {:ex_doc, ">= 0.0.0", only: :dev}
     ]
   end
 
   defp aliases do
-    ["test": ["ecto.create --quiet", "ecto.migrate", "test"]]
+    [test: ["ecto.create --quiet", "ecto.migrate", "test"]]
   end
 end
