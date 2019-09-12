@@ -3,7 +3,7 @@ defmodule EctoAudit.Mixfile do
 
   def project do
     [app: :ecto_audit,
-     version: "0.1.2",
+     version: "0.2.0",
      elixir: "~> 1.4",
      description: description(),
      elixirc_paths: elixirc_paths(Mix.env),
