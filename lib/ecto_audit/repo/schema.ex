@@ -52,7 +52,7 @@ defmodule EctoAudit.Repo.Schema do
 	"""
   defp audit_changes(multi, repo, changeset, user_id, opts \\ []) do
 		multi
-		|> Multi.run(:audit, fn (result) -> 
+		|> Multi.run(:audit, fn (repo, result) -> 
 			case result do
 				%{save: struct} ->
 					insert_audit(repo, struct, changeset, user_id, opts)
