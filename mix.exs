@@ -2,16 +2,18 @@ defmodule EctoAudit.Mixfile do
   use Mix.Project
 
   def project do
-    [app: :ecto_audit,
-     version: "0.3.0",
-     elixir: "~> 1.4",
-     description: description(),
-     elixirc_paths: elixirc_paths(Mix.env),
-     package: package(),
-     build_embedded: Mix.env == :prod,
-     start_permanent: Mix.env == :prod,
-     aliases: aliases(),
-     deps: deps()]
+    [
+      app: :ecto_audit,
+      version: "0.3.0",
+      elixir: "~> 1.4",
+      description: description(),
+      elixirc_paths: elixirc_paths(Mix.env()),
+      package: package(),
+      build_embedded: Mix.env() == :prod,
+      start_permanent: Mix.env() == :prod,
+      aliases: aliases(),
+      deps: deps()
+    ]
   end
 
   # Configuration for the OTP application
@@ -29,14 +31,15 @@ defmodule EctoAudit.Mixfile do
   end
 
   defp package do
-    [maintainers: ["Matt Weldon"],
-     licenses: ["MIT"],
-     links: %{"GitHub" => "https://github.com/sauce-consultants/ecto_audit"}]
+    [
+      maintainers: ["Matt Weldon"],
+      licenses: ["MIT"],
+      links: %{"GitHub" => "https://github.com/sauce-consultants/ecto_audit"}
+    ]
   end
 
   defp elixirc_paths(:test), do: ["lib", "test/support"]
-  defp elixirc_paths(_),     do: ["lib"]
-
+  defp elixirc_paths(_), do: ["lib"]
 
   # Dependencies can be Hex packages:
   #

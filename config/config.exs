@@ -1,7 +1,6 @@
 use Mix.Config
 
-config :ecto_audit, EctoAudit,
-  repo: EctoAudit.Test.Repo
+config :ecto_audit, EctoAudit, repo: EctoAudit.Test.Repo
 
 config :ecto_audit, ecto_repos: [EctoAudit.Test.Repo]
 
