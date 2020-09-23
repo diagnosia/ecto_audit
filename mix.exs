@@ -54,7 +54,7 @@ defmodule EctoAudit.Mixfile do
     [
       {:postgrex, ">= 0.0.0"},
       {:ecto, "~> 3.0"},
-      {:poison, "~> 4.0"},
+      {:poison, "~> 3.1"},
       {:ex_doc, ">= 0.0.0", only: :dev}
     ]
   end
