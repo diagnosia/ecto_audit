@@ -3,7 +3,7 @@ defmodule EctoAudit.Mixfile do
 
   def project do
     [app: :ecto_audit,
-     version: "0.2.0",
+     version: "0.3.0",
      elixir: "~> 1.4",
      description: description(),
      elixirc_paths: elixirc_paths(Mix.env),
@@ -51,7 +51,7 @@ defmodule EctoAudit.Mixfile do
     [
       {:postgrex, ">= 0.0.0"},
       {:ecto, "~> 3.0"},
-      {:poison, "~> 3.1"},
+      {:poison, "~> 4.0"},
       {:ex_doc, ">= 0.0.0", only: :dev}
     ]
   end

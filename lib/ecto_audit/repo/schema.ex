@@ -7,7 +7,7 @@ defmodule EctoAudit.Repo.Schema do
   History schema.
   """
   def audited_insert(repo, changeset, user_id, opts \\ []) do
-		begin_transaction
+		begin_transaction()
 		|> save_changeset(changeset, :insert)
 		|> audit_changes(repo, changeset, user_id, opts)
 		|> commit_transaction(repo)
@@ -19,24 +19,20 @@ defmodule EctoAudit.Repo.Schema do
   History schema.
   """
   def audited_update(repo, changeset, user_id, opts \\ []) do
-		begin_transaction
+		begin_transaction()
     |> save_changeset(changeset, :update)
 		|> audit_changes(repo, changeset, user_id, opts)
 		|> commit_transaction(repo)
   end
 
 
-  @doc """
-  Creates a new Multi to be used to wrap later commands in a transaction
-  """
+  # Creates a new Multi to be used to wrap later commands in a transaction
   defp begin_transaction do
   	Multi.new
 	end
 
 
-	@doc """
-	Saves the changeset according to the atom given in the last parameter
-	"""
+	# Saves the changeset according to the atom given in the last parameter
 	defp save_changeset(multi, changeset, :insert) do
 		multi |> Multi.insert(:save, changeset)
 	end
@@ -46,51 +42,41 @@ defmodule EctoAudit.Repo.Schema do
 	end
 
 
-	@doc """
-	Inserts a new History record containing the changes within the changeset
-	provided.
-	"""
-  defp audit_changes(multi, repo, changeset, user_id, opts \\ []) do
+	# Inserts a new History record containing the changes within the changeset provided.
+  defp audit_changes(multi, _repo, changeset, user_id, opts) do
 		multi
-		|> Multi.run(:audit, fn (repo, result) -> 
+		|> Multi.run(:audit, fn (repo, result) ->
 			case result do
 				%{save: struct} ->
 					insert_audit(repo, struct, changeset, user_id, opts)
-				otherwise -> 
+				otherwise ->
 					otherwise
 			end
 		end)
 	end
 
 
-	@doc """
-	Commits the transacation to the database and returns the following tuple
-	if successful:
-
-		{:ok, struct}
-
-	"""
+	# Commits the transacation to the database and returns the following tuple
+	# if successful: {:ok, struct}
 	defp commit_transaction(multi, repo) do
 		multi
 		|> repo.transaction
 		|> case do
 			{:ok, %{save: record}} ->
         {:ok, record}
-      {:error, step, changeset, _} ->
+      {:error, _step, changeset, _} ->
         {:error, changeset}
       otherwise ->
 				otherwise
 		end
 	end
 
-	@doc """
-	Builds a changeset for the *History module associated with the changeset
-	and then insert it.
-
-	Returns the original saved record as part of a tuple if successful, and
-	passes the error on if anything fails.
-	"""
-	defp insert_audit(repo, struct, changeset, user_id, opts \\ []) do
+	# Builds a changeset for the *History module associated with the changeset
+	# and then insert it.
+  #
+	# Returns the original saved record as part of a tuple if successful, and
+	# passes the error on if anything fails.
+	defp insert_audit(repo, struct, changeset, user_id, opts) do
     history_module = changeset |> history_module
     history_struct = history_module |> struct
     changes = changeset |> maybe_mask_fields(opts)
@@ -122,13 +108,13 @@ defmodule EctoAudit.Repo.Schema do
 		struct_name
 	end
 
-  defp history_module(changeset) do 
+  defp history_module(changeset) do
   	Module.concat(["#{changeset |> schema_module}History"])
   end
 
   defp maybe_mask_fields(changeset, opts) do
     changeset.changes
-    |> Enum.reduce(%{}, fn({k, v}, acc) -> 
+    |> Enum.reduce(%{}, fn({k, v}, acc) ->
       acc |> Map.put(k, cleanse(k, v, opts))
     end)
   end
